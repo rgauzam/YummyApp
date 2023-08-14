@@ -21,4 +21,13 @@
     <string name="sell">Sell</string>
     <string name="yes">Yes</string>
     <string name="required_fields">*required fields</string>
+
+    <string name="first_search">fruits</string>
+    <string name="details_next_dialog">Do you want to see the details of the image?</string>
+
+    <string name="user">User:</string>
+    <string name="id">Id:</string>
+
+
+    <string name="start_search_text">chicken</string>
 </resources>

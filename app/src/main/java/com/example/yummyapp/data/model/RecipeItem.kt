@@ -12,8 +12,10 @@ data class Meal(
     val strInstructions: String,
     val strMealThumb: String,
     val strYoutube: String,
- //   val strIngredients: List<Ingredient>
+    // val strIngredients: List<Ingredient>
+    //Moze po prostu zapytam sie o to luka pozniej???
 )
+
 @Serializable
 data class Ingredient(
     val name: String,

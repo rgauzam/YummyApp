@@ -1,60 +1,118 @@
 package com.example.yummyapp.ui.views
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import com.example.yummyapp.R
 import com.example.yummyapp.ui.uiStates.RecipeDetailsUiState
+import com.example.yummyapp.ui.uiStates.instructionList
+import com.example.yummyapp.ui.uiStates.tagList
 import com.example.yummyapp.ui.viewmodels.RecipeDetailsViewModel
 
 @Composable
 fun RecipeDetailsScreen(viewModel: RecipeDetailsViewModel) {
     val state = viewModel.uiState.collectAsState().value
     state ?: return
-
     ImageDetailsView(state)
 }
 
 @Composable
 fun ImageDetailsView(state: RecipeDetailsUiState) {
     Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(modifier = Modifier.padding(16.dp)) {
+        LazyColumn(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))) {
             item {
-//                AsyncImage(
-//                    model = state.bigUrl,
-//                    contentDescription = "",
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .clip(RoundedCornerShape(4.dp))
-//                )
-                Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Nazwa: ${state.idMeal}",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
+                    text = state.strMeal,
+                    style = MaterialTheme.typography.displayLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_extra_small))
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Nazwa: ${state.strMeal}",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                Box(
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.small)
+                ) {
+                    AsyncImage(
+                        model = state.strMealThumb,
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
                 Spacer(modifier = Modifier.height(8.dp))
+                TagList(state.tagList)
                 Text(
-                    text = "Liczba lajków: ${state.strCategory}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface
+                    text = stringResource(R.string.instructions),
+                    style = MaterialTheme.typography.headlineMedium,
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_extra_small))
                 )
-
+                RecipeSteps(state.instructionList)
             }
+        }
+
+    }
+}
+
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun TagList(tags: List<String>) {
+    FlowRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.End
+    ) {
+        tags.forEach { tag ->
+            SuggestionChip(
+                onClick = {},
+                modifier = Modifier.padding(dimensionResource(R.dimen.padding_extra_small)),
+                shape = SuggestionChipDefaults.shape,
+                colors = SuggestionChipDefaults.suggestionChipColors(),
+                elevation = SuggestionChipDefaults.suggestionChipElevation(),
+                border = SuggestionChipDefaults.suggestionChipBorder(),
+                label = {
+                    Text(
+                        text = "$tag"
+                    )
+
+                },
+            )
+        }
+
+    }
+}
+
+@Composable
+fun RecipeSteps(steps: List<String>) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        steps.forEach { step ->
+            Text(
+                text = "$step",
+                modifier = Modifier.padding(dimensionResource(R.dimen.padding_extra_small))
+            )
+            Divider()
         }
 
     }

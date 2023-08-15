@@ -63,7 +63,7 @@ class SearchRecipesViewModel @Inject constructor(
 
     private fun cr8UiStateFromResponse(recipesResponse: RecipesResponse): UIState.Success<List<RecipeItemUiState>> {
         val itemsUiState = recipesResponse.meals.map {
-            RecipeItemUiState(it.idMeal, it.strMeal)
+            RecipeItemUiState(it.idMeal, it.strMeal, it.strMealThumb)
         }
         return UIState.Success(itemsUiState)
     }

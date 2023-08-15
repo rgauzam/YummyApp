@@ -21,7 +21,7 @@ class RecipeDetailsViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private val mealId: String = checkNotNull(savedStateHandle[IMAGE_DETAILS_ID_PARAM])
+    private val mealId: String = checkNotNull(savedStateHandle[IMAGE_DETAILS_ID_PARAM]).toString()
 
     private val _uiState: MutableStateFlow<RecipeDetailsUiState?> = MutableStateFlow(null)
     val uiState: StateFlow<RecipeDetailsUiState?> = _uiState
@@ -33,7 +33,10 @@ class RecipeDetailsViewModel @Inject constructor(
                     val uiState = RecipeDetailsUiState(
                         it.idMeal,
                         it.strMeal,
-                        it.strCategory
+                        it.strCategory,
+                        it.strArea,
+                        it.strInstructions,
+                        it.strMealThumb
                     )
                     _uiState.value = uiState
                 }

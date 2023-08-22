@@ -2,6 +2,7 @@ package com.example.yummyapp.ui.viewmodels
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.example.yummyapp.data.model.Ingredient
 import com.example.yummyapp.data.repository.RecipesRepository
 import com.example.yummyapp.ui.navigation.Nav.IMAGE_DETAILS_ID_PARAM
 import com.example.yummyapp.ui.uiStates.RecipeDetailsUiState
@@ -36,7 +37,8 @@ class RecipeDetailsViewModel @Inject constructor(
                         it.strCategory,
                         it.strArea,
                         it.strInstructions,
-                        it.strMealThumb
+                        it.strMealThumb,
+                        it.ingredients
                     )
                     _uiState.value = uiState
                 }

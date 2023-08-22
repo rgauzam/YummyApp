@@ -26,7 +26,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.shapes
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -36,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -52,7 +55,6 @@ import com.example.yummyapp.ui.uiStates.RecipeItemUiState
 import com.example.yummyapp.ui.uiStates.UIState
 import com.example.yummyapp.ui.uiStates.fakeRecipe
 import com.example.yummyapp.ui.viewmodels.SearchRecipesViewModel
-
 
 @Composable
 fun SearchRecipesScreen(viewModel: SearchRecipesViewModel, navHostController: NavHostController) {
@@ -71,7 +73,6 @@ fun SearchRecipesScreen(viewModel: SearchRecipesViewModel, navHostController: Na
                     CircularProgressIndicator()
                 }
             }
-
             is UIState.Success -> {
                 Recipes(listState.data, navHostController)
             }
@@ -80,6 +81,9 @@ fun SearchRecipesScreen(viewModel: SearchRecipesViewModel, navHostController: Na
                 val error = (listState).exception
                 Text(text = "Error: ${error.message}")
             }
+        }
+        NavigationBar() {
+            
         }
     }
 
@@ -109,31 +113,6 @@ fun RecipeItem(
     recipe: RecipeItemUiState,
     navHostController: NavHostController
 ) {
-    val showDialog = remember { mutableStateOf(false) }
-    if (showDialog.value) {
-        AlertDialog(
-            onDismissRequest = {
-                showDialog.value = false
-            },
-            title = {
-                Text(text = stringResource(R.string.details_next_dialog))
-            },
-            confirmButton = {
-                Button(onClick = {
-                    showDialog.value = false
-                    val recipeId = recipe.idMeal
-                    navHostController.navigate(IMAGE_DETAILS_SCREEN_ROUTE + recipeId)
-                }) {
-                    Text(text = stringResource(R.string.yes))
-                }
-            },
-            dismissButton = {
-                Button(onClick = { showDialog.value = false }) {
-                    Text(text = stringResource(R.string.no))
-                }
-            }
-        )
-    }
     Card(
         elevation = CardDefaults.elevatedCardElevation(),
         shape = shapes.small,
@@ -141,7 +120,8 @@ fun RecipeItem(
         modifier = Modifier
             .padding(dimensionResource(R.dimen.card_spacer))
             .clickable {
-                showDialog.value = true
+                val recipeId = recipe.idMeal
+                navHostController.navigate(IMAGE_DETAILS_SCREEN_ROUTE + recipeId)
             }
     ) {
         Column(

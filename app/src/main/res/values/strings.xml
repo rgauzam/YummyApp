@@ -31,6 +31,11 @@
     <string name="region">Region:</string>
     <string name="instruction">Instruction:</string>
     <string name="instructions">Method</string>
+    <string name="ingredients">Ingredients</string>
+
+    <string name="home">home</string>
+    <string name="recipe">recipe</string>
+    <string name="saved">saved</string>
 
 
     <string name="start_search_text">chicken</string>

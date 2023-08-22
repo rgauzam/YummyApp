@@ -6,3 +6,7 @@ import kotlinx.serialization.Serializable
 data class RecipesResponse(
     val meals: List<Meal>
 )
+@Serializable
+data class TransformedRecipesResponse(
+    val meals: List<TransformedMeal>
+)

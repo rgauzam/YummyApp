@@ -13,11 +13,3 @@ object Nav {
     val SEARCH_IMAGES_SCREEN_ROUTE = "searchImages/"
     val IMAGE_DETAILS_SCREEN_ROUTE = "imageDetails/"
 }
-
-
-sealed class BottomNavItem(val route: String) {
-    object Search : BottomNavItem(SEARCH_IMAGES_SCREEN_ROUTE)
-    object Details : BottomNavItem(IMAGE_DETAILS_SCREEN_ROUTE)
-    object Saved : BottomNavItem(SEARCH_IMAGES_SCREEN_ROUTE)
-
-}

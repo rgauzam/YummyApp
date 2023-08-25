@@ -37,6 +37,9 @@
     <string name="recipe">recipe</string>
     <string name="saved">saved</string>
 
+    <string name="saved_recipes">Saved recipes</string>
+
+
 
     <string name="start_search_text">chicken</string>
 </resources>

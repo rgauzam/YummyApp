@@ -9,7 +9,8 @@ data class RecipeDetailsUiState(
     val strArea: String,
     val strInstructions: String,
     val strMealThumb: String,
-    val strIngredients: List<Ingredient>
+    val strIngredients: List<Ingredient>,
+  //  var isSaved: Boolean = false
 )
 
 val RecipeDetailsUiState.instructionList: List<String>

@@ -67,4 +67,8 @@ class SearchRecipesViewModel @Inject constructor(
         return UIState.Success(itemsUiState)
     }
 
+    fun gobBack(): String {
+        return _uiState.value.searchingText
+    }
+
 }

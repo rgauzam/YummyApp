@@ -106,13 +106,4 @@ class RecipesRepository @Inject constructor(private val recipeRemoteDataSource: 
             else -> null
         }
     }
-//co to do chuja pana companion object
-    companion object {
-        suspend fun getRecipesDetails(recipesRepository: RecipesRepository, query: String): TransformedRecipesResponse {
-            recipesRepository.recipesResponse = recipesRepository.recipeRemoteDataSource.getRecipesDetails(query)
-            recipesRepository.transformedRecipesResponse =
-                recipesRepository.transformMealList(recipesRepository.recipesResponse.meals)
-            return recipesRepository.transformedRecipesResponse
-        }
-    }
 }

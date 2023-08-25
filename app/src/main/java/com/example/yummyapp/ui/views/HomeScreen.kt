@@ -50,6 +50,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.yummyapp.R
+import com.example.yummyapp.ui.components.RecipeItem
+import com.example.yummyapp.ui.components.Recipes
 import com.example.yummyapp.ui.navigation.Nav.IMAGE_DETAILS_SCREEN_ROUTE
 import com.example.yummyapp.ui.uiStates.RecipeItemUiState
 import com.example.yummyapp.ui.uiStates.UIState
@@ -82,77 +84,10 @@ fun SearchRecipesScreen(viewModel: SearchRecipesViewModel, navHostController: Na
                 Text(text = "Error: ${error.message}")
             }
         }
-        NavigationBar() {
-            
-        }
     }
 
 }
 
-@Composable
-fun Recipes(
-    recipes: List<RecipeItemUiState>,
-    navHostController: NavHostController
-) {
-
-    LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Adaptive(135.dp),
-        contentPadding = PaddingValues(4.dp),
-        content = {
-            items(recipes) { recipe ->
-                RecipeItem(recipe, navHostController)
-            }
-        },
-        modifier = Modifier
-            .fillMaxSize()
-    )
-}
-
-@Composable
-fun RecipeItem(
-    recipe: RecipeItemUiState,
-    navHostController: NavHostController
-) {
-    Card(
-        elevation = CardDefaults.elevatedCardElevation(),
-        shape = shapes.small,
-        colors = CardDefaults.elevatedCardColors(),
-        modifier = Modifier
-            .padding(dimensionResource(R.dimen.card_spacer))
-            .clickable {
-                val recipeId = recipe.idMeal
-                navHostController.navigate(IMAGE_DETAILS_SCREEN_ROUTE + recipeId)
-            }
-    ) {
-        Column(
-            modifier = Modifier.padding(dimensionResource(R.dimen.padding_extra_small)),
-            verticalArrangement = Arrangement.Center,
-        ) {
-            Box(
-                modifier = Modifier
-                    .clip(shapes.small)
-            ) {
-                AsyncImage(
-                    model = recipe.strMealThumb,
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_extra_small)))
-            Text(
-                text = recipe.strMeal,
-                style = MaterialTheme.typography.labelSmall,
-                textAlign = TextAlign.Start,
-            )
-
-
-        }
-    }
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     viewModel: SearchRecipesViewModel,
@@ -179,8 +114,6 @@ fun SearchBar(
             .fillMaxWidth()
             .padding(dimensionResource(R.dimen.padding_extra_small))
     )
-
-
 }
 
 @Preview

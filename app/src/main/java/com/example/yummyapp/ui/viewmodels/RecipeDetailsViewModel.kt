@@ -2,9 +2,7 @@ package com.example.yummyapp.ui.viewmodels
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.room.PrimaryKey
-import com.example.yummyapp.data.model.Ingredient
-import com.example.yummyapp.data.model.LocalMeal
+import com.example.yummyapp.data.model.TransformedMeal
 import com.example.yummyapp.data.repository.LocalRecipesRepository
 import com.example.yummyapp.data.repository.RecipesRepository
 import com.example.yummyapp.ui.navigation.Nav.IMAGE_DETAILS_ID_PARAM
@@ -52,31 +50,34 @@ class RecipeDetailsViewModel @Inject constructor(
         }
     }
 
+
     fun saveRecipeToDb(recipe: RecipeDetailsUiState) {
         CoroutineScope(Dispatchers.IO).launch {
-            val localMeal = LocalMeal(
+            val transformedMeal = TransformedMeal(
                 recipe.idMeal,
                 recipe.strMeal,
                 recipe.strMealThumb,
                 recipe.strCategory,
                 recipe.strArea,
-                recipe.strInstructions
+                recipe.strInstructions,
+                recipe.strIngredients
             )
-            localRecipesRepository.insertRecipe(localMeal)
+            localRecipesRepository.insertRecipe(transformedMeal)
         }
     }
 
     fun removeRecipeFromDb(recipe: RecipeDetailsUiState) {
         CoroutineScope(Dispatchers.IO).launch {
-            val localMeal = LocalMeal(
+            val transformedMeal = TransformedMeal(
                 recipe.idMeal,
                 recipe.strMeal,
                 recipe.strMealThumb,
                 recipe.strCategory,
                 recipe.strArea,
-                recipe.strInstructions
+                recipe.strInstructions,
+                recipe.strIngredients
             )
-            localRecipesRepository.deleteRecipe(localMeal)
+            localRecipesRepository.deleteRecipe(transformedMeal)
         }
     }
 }

@@ -1,13 +1,13 @@
 package com.example.yummyapp.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.yummyapp.data.model.LocalMeal
+import com.example.yummyapp.data.model.TransformedMeal
 import com.example.yummyapp.data.repository.LocalRecipesRepository
 import com.example.yummyapp.ui.uiStates.RecipeItemUiState
 import com.example.yummyapp.ui.uiStates.SavedRecipesUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +22,7 @@ class SavedRecipesViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    private val _recipes = localRecipesRepository.getRecipesOrderedAlphabetically().stateIn(
+    private val _recipes = localRecipesRepository.getRecipes().stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(), emptyList()
     )
     private val _uiState: MutableStateFlow<SavedRecipesUiState> = MutableStateFlow(
@@ -34,7 +34,7 @@ class SavedRecipesViewModel @Inject constructor(
         loadRecipes()
     }
 
-    fun getRecipes(): Flow<List<LocalMeal>> {
+    fun getRecipes(): StateFlow<List<TransformedMeal>> {
         return _recipes
     }
 
@@ -47,7 +47,7 @@ class SavedRecipesViewModel @Inject constructor(
         }
     }
 
-    private fun cr8UiStateFromResponse(recipesResponse: List<LocalMeal>): List<RecipeItemUiState> {
+    private fun cr8UiStateFromResponse(recipesResponse: List<TransformedMeal>): List<RecipeItemUiState> {
         val itemsUiState = recipesResponse.map {
             RecipeItemUiState(it.idMeal, it.strMeal, it.strMealThumb)
         }

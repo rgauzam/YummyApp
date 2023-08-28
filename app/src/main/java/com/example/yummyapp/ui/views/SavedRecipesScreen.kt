@@ -47,7 +47,7 @@ fun SavedRecipesScreen(viewModel: SavedRecipesViewModel, navHostController: NavH
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = {navHostController.navigate(Nav.SEARCH_IMAGES_SCREEN_ROUTE + "cream") }) {
+                    IconButton(onClick = { navHostController.navigate(Nav.SEARCH_IMAGES_SCREEN_ROUTE + "cream") }) {
                         //DODAC TE NAWIGACJE DO TYŁU !!!
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -67,89 +67,9 @@ fun SavedRecipesScreen(viewModel: SavedRecipesViewModel, navHostController: NavH
                 scrollBehavior = scrollBehavior
             )
         }
-    ){
-        Recipes(recipes =state.savedRecipes , navHostController = navHostController)
+    ) {
+
+        Recipes(recipes = state.savedRecipes, navHostController = navHostController)
 
     }
 }
-//
-//@Composable
-//fun ContactScreen(
-//    state: ContactState,
-//    onEvent: (ContactEvent) -> Unit
-//) {
-//    Scaffold(
-//        floatingActionButton = {
-//            FloatingActionButton(onClick = {
-//                onEvent(ContactEvent.ShowDialog)
-//            }) {
-//                Icon(
-//                    imageVector = Icons.Default.Add,
-//                    contentDescription = "Add contact"
-//                )
-//            }
-//        },
-//    ) { _ ->
-//        if (state.isAddingContact) {
-//            AddContactDialog(state = state, onEvent = onEvent)
-//        }
-//
-//        LazyColumn(
-//            contentPadding = PaddingValues(16.dp),
-//            modifier = Modifier.fillMaxSize(),
-//            verticalArrangement = Arrangement.spacedBy(16.dp)
-//        ) {
-//            item {
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .horizontalScroll(rememberScrollState()),
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//                    SortType.values().forEach { sortType ->
-//                        Row(
-//                            modifier = Modifier
-//                                .clickable {
-//                                    onEvent(ContactEvent.SortContacts(sortType))
-//                                },
-//                            verticalAlignment = CenterVertically
-//                        ) {
-//                            RadioButton(
-//                                selected = state.sortType == sortType,
-//                                onClick = {
-//                                    onEvent(ContactEvent.SortContacts(sortType))
-//                                }
-//                            )
-//                            Text(text = sortType.name)
-//                        }
-//                    }
-//                }
-//            }
-//            items(state.contacts) { contact ->
-//                Row(
-//                    modifier = Modifier.fillMaxWidth()
-//                ) {
-//                    Column(
-//                        modifier = Modifier.weight(1f)
-//                    ) {
-//                        Text(
-//                            text = "${contact.firstName} ${contact.lastName}",
-//                            fontSize = 20.sp
-//                        )
-//                        Text(text = contact.phoneNumber, fontSize = 12.sp)
-//                    }
-//                    IconButton(onClick = {
-//                        onEvent(ContactEvent.DeleteContact(contact))
-//                    }) {
-//                        Icon(
-//                            imageVector = Icons.Default.Delete,
-//                            contentDescription = "Delete contact"
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//
-//}

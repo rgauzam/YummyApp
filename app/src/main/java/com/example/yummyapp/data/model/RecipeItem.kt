@@ -1,6 +1,5 @@
 package com.example.yummyapp.data.model
 
-import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
 
@@ -52,7 +51,8 @@ data class Meal(
     val strMeasure18: String?,
     val strMeasure19: String?,
     val strMeasure20: String?
-    )
+)
+
 @Serializable
 data class TransformedMeal(
     val idMeal: String,
@@ -63,6 +63,7 @@ data class TransformedMeal(
     val strMealThumb: String,
     val ingredients: List<Ingredient>
 )
+
 @Serializable
 data class Ingredient(
     val strIngredient: String?,

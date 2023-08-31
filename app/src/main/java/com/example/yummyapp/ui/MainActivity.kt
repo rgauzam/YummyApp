@@ -4,13 +4,13 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -75,8 +75,6 @@ private fun YummyApp() {
             NavigationBar() {
                 val navBackStackEntry = navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry.value?.destination?.route
-
-
                 items.forEach { screen ->
                     NavigationBarItem(
                         icon = {
@@ -84,12 +82,12 @@ private fun YummyApp() {
                                 imageVector = screen.icon,
                                 contentDescription = null
                             )
-                        }, // Replace with your icon
+                        },
                         label = { Text(stringResource(id = screen.label)) },
                         selected = currentRoute == screen.route,
                         onClick = {
                             navController.navigate(screen.route) {
-                              //  popUpTo(navController.graph.startDestination)
+                                //  popUpTo(navController.graph.startDestination)
                                 launchSingleTop = true
                             }
                         }
@@ -98,41 +96,53 @@ private fun YummyApp() {
             }
         }
     )
-    {
-        NavHost(
-            navController = navController,
-            startDestination = "$SEARCH_IMAGES_SCREEN_ROUTE{$SEARCH_TEXT_PARAM}"
-        ) {
-            composable(
-                "$SEARCH_IMAGES_SCREEN_ROUTE{$SEARCH_TEXT_PARAM}",
-                arguments = listOf(navArgument(SEARCH_TEXT_PARAM) {
-                    type = NavType.StringType; defaultValue = startSearchText
-                })
+    { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            NavHost(
+                navController = navController,
+                startDestination = "$SEARCH_IMAGES_SCREEN_ROUTE{$SEARCH_TEXT_PARAM}"
             ) {
-                val viewModel = hiltViewModel<SearchRecipesViewModel>()
-                SearchRecipesScreen(viewModel, navController)
-            }
-            composable(
-                IMAGE_DETAILS_SCREEN_ROUTE + "{$IMAGE_DETAILS_ID_PARAM}",
-                arguments = listOf(navArgument(IMAGE_DETAILS_ID_PARAM) { type = NavType.IntType })
-            ) {
-                val viewModel = hiltViewModel<RecipeDetailsViewModel>()
-                RecipeDetailsScreen(viewModel, navController)
-            }
-            composable(
-                SAVED_IMAGES_SCREEN_ROUTE,
-               // arguments = listOf(navArgument(IMAGE_DETAILS_ID_PARAM) { type = NavType.IntType })
-            ) {
-                val viewModel = hiltViewModel<SavedRecipesViewModel>()
-                SavedRecipesScreen(viewModel, navController)
+                composable(
+                    "$SEARCH_IMAGES_SCREEN_ROUTE{$SEARCH_TEXT_PARAM}",
+                    arguments = listOf(navArgument(SEARCH_TEXT_PARAM) {
+                        type = NavType.StringType; defaultValue = startSearchText
+                    })
+                ) {
+                    val viewModel = hiltViewModel<SearchRecipesViewModel>()
+                    SearchRecipesScreen(viewModel, navController)
+                }
+                composable(
+                    IMAGE_DETAILS_SCREEN_ROUTE + "{$IMAGE_DETAILS_ID_PARAM}",
+                    arguments = listOf(navArgument(IMAGE_DETAILS_ID_PARAM) {
+                        type = NavType.IntType
+                    })
+                ) {
+                    val viewModel = hiltViewModel<RecipeDetailsViewModel>()
+                    RecipeDetailsScreen(viewModel, navController)
+                }
+                composable(
+                    SAVED_IMAGES_SCREEN_ROUTE,
+                    // arguments = listOf(navArgument(IMAGE_DETAILS_ID_PARAM) { type = NavType.IntType })
+                ) {
+                    val viewModel = hiltViewModel<SavedRecipesViewModel>()
+                    SavedRecipesScreen(viewModel, navController)
+                }
             }
         }
+
     }
 
 }
 
 sealed class Screen(val route: String, val label: Int, val icon: ImageVector) {
-    object Search : Screen("$SEARCH_IMAGES_SCREEN_ROUTE{$SEARCH_TEXT_PARAM}", R.string.home, Icons.Filled.Home)
-    object Details : Screen(IMAGE_DETAILS_SCREEN_ROUTE+ "{$IMAGE_DETAILS_ID_PARAM}", R.string.recipe, Icons.Filled.Info)
+    object Search :
+        Screen("$SEARCH_IMAGES_SCREEN_ROUTE{$SEARCH_TEXT_PARAM}", R.string.home, Icons.Filled.Home)
+
+    object Details : Screen(
+        IMAGE_DETAILS_SCREEN_ROUTE + "{$IMAGE_DETAILS_ID_PARAM}",
+        R.string.recipe,
+        Icons.Filled.Info
+    )
+
     object Saved : Screen(SAVED_IMAGES_SCREEN_ROUTE, R.string.saved, Icons.Filled.Favorite)
 }

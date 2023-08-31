@@ -1,6 +1,9 @@
 package com.example.yummyapp.ui.views
 
 import android.annotation.SuppressLint
+import android.util.Log
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
@@ -67,9 +70,10 @@ fun SavedRecipesScreen(viewModel: SavedRecipesViewModel, navHostController: NavH
                 scrollBehavior = scrollBehavior
             )
         }
-    ) {
-
-        Recipes(recipes = state.savedRecipes, navHostController = navHostController)
-
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            Recipes(recipes = state.savedRecipes, navHostController = navHostController)
+            Log.d("RecipeImage", "URL: ${state.savedRecipes}")
+        }
     }
 }

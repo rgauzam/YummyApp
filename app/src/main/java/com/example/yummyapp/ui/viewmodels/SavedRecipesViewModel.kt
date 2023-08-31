@@ -49,7 +49,7 @@ class SavedRecipesViewModel @Inject constructor(
 
     private fun cr8UiStateFromResponse(recipesResponse: List<TransformedMeal>): List<RecipeItemUiState> {
         val itemsUiState = recipesResponse.map {
-            RecipeItemUiState(it.idMeal, it.strMeal, it.strMealThumb)
+            RecipeItemUiState(idMeal = it.idMeal, strMeal =  it.strMeal,strMealThumb =  it.strMealThumb)
         }
         return itemsUiState
     }

@@ -10,11 +10,17 @@ data class RecipeDetailsUiState(
     val strInstructions: String,
     val strMealThumb: String,
     val strIngredients: List<Ingredient>,
-  //  var isSaved: Boolean = false
 )
 
 val RecipeDetailsUiState.instructionList: List<String>
-    get() = strInstructions.split("\n")
+    get() = CleanInstruction(strInstructions).split("\n")
 
 val RecipeDetailsUiState.tagList: List<String>
     get() = listOf(strCategory, strArea)
+fun CleanInstruction(instructions: String): String {
+    // this will allow us to make each instruction look similar in the app
+    return instructions.split("\n")
+        .filter { it.isNotBlank() }
+        .filterNot { it.contains(Regex("\\bSTEP\\b", RegexOption.IGNORE_CASE)) }
+        .joinToString("\n")
+}

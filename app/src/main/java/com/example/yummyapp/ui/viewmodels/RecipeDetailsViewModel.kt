@@ -2,6 +2,7 @@ package com.example.yummyapp.ui.viewmodels
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.example.yummyapp.data.model.Ingredient
 import com.example.yummyapp.data.model.TransformedMeal
 import com.example.yummyapp.data.repository.LocalRecipesRepository
 import com.example.yummyapp.data.repository.RecipesRepository
@@ -50,17 +51,16 @@ class RecipeDetailsViewModel @Inject constructor(
         }
     }
 
-
     fun saveRecipeToDb(recipe: RecipeDetailsUiState) {
         CoroutineScope(Dispatchers.IO).launch {
             val transformedMeal = TransformedMeal(
-                recipe.idMeal,
-                recipe.strMeal,
-                recipe.strMealThumb,
-                recipe.strCategory,
-                recipe.strArea,
-                recipe.strInstructions,
-                recipe.strIngredients
+                idMeal = recipe.idMeal,
+                strMeal = recipe.strMeal,
+                strMealThumb = recipe.strMealThumb,
+                strCategory = recipe.strCategory,
+                strArea = recipe.strArea,
+                strInstructions = recipe.strInstructions,
+                ingredients = recipe.strIngredients
             )
             localRecipesRepository.insertRecipe(transformedMeal)
         }
@@ -69,13 +69,13 @@ class RecipeDetailsViewModel @Inject constructor(
     fun removeRecipeFromDb(recipe: RecipeDetailsUiState) {
         CoroutineScope(Dispatchers.IO).launch {
             val transformedMeal = TransformedMeal(
-                recipe.idMeal,
-                recipe.strMeal,
-                recipe.strMealThumb,
-                recipe.strCategory,
-                recipe.strArea,
-                recipe.strInstructions,
-                recipe.strIngredients
+                idMeal = recipe.idMeal,
+                strMeal = recipe.strMeal,
+                strMealThumb = recipe.strMealThumb,
+                strCategory = recipe.strCategory,
+                strArea = recipe.strArea,
+                strInstructions = recipe.strInstructions,
+                ingredients = recipe.strIngredients
             )
             localRecipesRepository.deleteRecipe(transformedMeal)
         }

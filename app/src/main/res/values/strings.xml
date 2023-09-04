@@ -39,7 +39,7 @@
 
     <string name="saved_recipes">Saved recipes</string>
 
-
-
-    <string name="start_search_text">chicken</string>
+    <string name="internet_error">You don\'t have an internet connection</string>
+    <string name="no_recipes_error">We don\'t have recipes for this search</string>
+    <string name="welcome_message">Search for new recipes!</string>
 </resources>

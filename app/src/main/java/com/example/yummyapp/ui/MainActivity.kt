@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -50,13 +51,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             YummyAppTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     YummyApp()
-
                 }
             }
         }
@@ -67,7 +66,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun YummyApp() {
     val navController = rememberNavController()
-    val startSearchText = stringResource(R.string.start_search_text)
     val items = listOf(Screen.Search, Screen.Details, Screen.Saved)
 
     Scaffold(
@@ -87,8 +85,11 @@ private fun YummyApp() {
                         selected = currentRoute == screen.route,
                         onClick = {
                             navController.navigate(screen.route) {
-                                //  popUpTo(navController.graph.startDestination)
                                 launchSingleTop = true
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+//                                restoreState = true
                             }
                         }
                     )
@@ -100,13 +101,10 @@ private fun YummyApp() {
         Box(modifier = Modifier.padding(innerPadding)) {
             NavHost(
                 navController = navController,
-                startDestination = "$SEARCH_IMAGES_SCREEN_ROUTE{$SEARCH_TEXT_PARAM}"
+                startDestination = "$SEARCH_IMAGES_SCREEN_ROUTE"
             ) {
                 composable(
-                    "$SEARCH_IMAGES_SCREEN_ROUTE{$SEARCH_TEXT_PARAM}",
-                    arguments = listOf(navArgument(SEARCH_TEXT_PARAM) {
-                        type = NavType.StringType; defaultValue = startSearchText
-                    })
+                    "$SEARCH_IMAGES_SCREEN_ROUTE",
                 ) {
                     val viewModel = hiltViewModel<SearchRecipesViewModel>()
                     SearchRecipesScreen(viewModel, navController)
@@ -122,21 +120,18 @@ private fun YummyApp() {
                 }
                 composable(
                     SAVED_IMAGES_SCREEN_ROUTE,
-                    // arguments = listOf(navArgument(IMAGE_DETAILS_ID_PARAM) { type = NavType.IntType })
                 ) {
                     val viewModel = hiltViewModel<SavedRecipesViewModel>()
                     SavedRecipesScreen(viewModel, navController)
                 }
             }
         }
-
     }
-
 }
 
 sealed class Screen(val route: String, val label: Int, val icon: ImageVector) {
     object Search :
-        Screen("$SEARCH_IMAGES_SCREEN_ROUTE{$SEARCH_TEXT_PARAM}", R.string.home, Icons.Filled.Home)
+        Screen("$SEARCH_IMAGES_SCREEN_ROUTE", R.string.home, Icons.Filled.Home)
 
     object Details : Screen(
         IMAGE_DETAILS_SCREEN_ROUTE + "{$IMAGE_DETAILS_ID_PARAM}",

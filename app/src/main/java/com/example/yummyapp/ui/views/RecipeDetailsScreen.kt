@@ -66,7 +66,7 @@ fun ImageDetailsView(
     navHostController: NavHostController,
     viewModel: RecipeDetailsViewModel,
 ) {
-    var isSaved by remember { mutableStateOf(false) }
+    var isSaved by remember { mutableStateOf(state.isSaved) }
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
             {
@@ -80,8 +80,7 @@ fun ImageDetailsView(
                         )
                     },
                     navigationIcon = {
-                        IconButton(onClick = { navHostController.navigate(Nav.SEARCH_IMAGES_SCREEN_ROUTE + "fish") }) {
-                            //jak tutaj dodać taki dane searchinguistate zeby to działało sprawnie?
+                        IconButton(onClick = { navHostController.navigateUp() }) {
                             Icon(
                                 imageVector = Icons.Filled.ArrowBack,
                                 contentDescription = "Localized description"
@@ -91,11 +90,8 @@ fun ImageDetailsView(
                     actions = {
                         IconButton(onClick = {
                             isSaved = !isSaved
-                            if (isSaved) {
-                                viewModel.saveRecipeToDb(state)
-                            } else {
-                                viewModel.removeRecipeFromDb(state)
-                            }
+                            if (isSaved) viewModel.saveRecipeToDb(state)
+                            else viewModel.removeRecipeFromDb(state)
                         }) {
                             Icon(
                                 imageVector = if (isSaved) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
@@ -128,8 +124,6 @@ fun ImageDetailsView(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Row() {
-                        //   ExtendedFloatingActionButtonTextSample()
-                        // ElevatedButton(onClick = { /* Do something! */ }) { Text(stringResource(R.string.ingredients)) }
                         TagList(state.tagList)
                     }
 

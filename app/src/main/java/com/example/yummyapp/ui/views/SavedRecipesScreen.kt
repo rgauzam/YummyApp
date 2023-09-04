@@ -50,8 +50,7 @@ fun SavedRecipesScreen(viewModel: SavedRecipesViewModel, navHostController: NavH
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navHostController.navigate(Nav.SEARCH_IMAGES_SCREEN_ROUTE + "cream") }) {
-                        //DODAC TE NAWIGACJE DO TYŁU !!!
+                    IconButton(onClick = {  navHostController.navigateUp() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Localized description"
@@ -59,7 +58,6 @@ fun SavedRecipesScreen(viewModel: SavedRecipesViewModel, navHostController: NavH
                     }
                 },
                 actions = {
-                    // RowScope here, so these icons will be placed horizontally
                     IconButton(onClick = { /* doSomething() */ }) {
                         Icon(
                             imageVector = Icons.Filled.Favorite,

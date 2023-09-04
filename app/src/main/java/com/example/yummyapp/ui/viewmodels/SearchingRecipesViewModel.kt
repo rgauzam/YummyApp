@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.yummyapp.data.model.TransformedRecipesResponse
 import com.example.yummyapp.data.repository.RecipesRepository
-import com.example.yummyapp.ui.navigation.Nav.SEARCH_TEXT_PARAM
 import com.example.yummyapp.ui.uiStates.RecipeItemUiState
 import com.example.yummyapp.ui.uiStates.SearchUiState
 import com.example.yummyapp.ui.uiStates.UIState
@@ -24,19 +23,15 @@ class SearchRecipesViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private val startSearchText: String = checkNotNull(savedStateHandle[SEARCH_TEXT_PARAM])
+    // private val startSearchText: String = checkNotNull(savedStateHandle[SEARCH_TEXT_PARAM])
 
     private val _uiState: MutableStateFlow<SearchUiState> = MutableStateFlow(
         SearchUiState(
-            startSearchText,
-            UIState.Loading
+            uiState = UIState.Idle
         )
     )
     val uiState: StateFlow<SearchUiState> = _uiState
 
-    init {
-        loadImages()
-    }
 
     fun loadImages() {
         CoroutineScope(Dispatchers.Default).launch {
@@ -65,10 +60,6 @@ class SearchRecipesViewModel @Inject constructor(
             RecipeItemUiState(it.idMeal, it.strMeal, it.strMealThumb)
         }
         return UIState.Success(itemsUiState)
-    }
-
-    fun gobBack(): String {
-        return _uiState.value.searchingText
     }
 
 }

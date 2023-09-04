@@ -10,6 +10,8 @@ data class RecipeDetailsUiState(
     val strInstructions: String,
     val strMealThumb: String,
     val strIngredients: List<Ingredient>,
+    var isSaved: Boolean
+//JAK ZROBIC ZEBY TE SERDUSZKO DZIALALO Z TYM I TO NA BIEZACO? TODO
 )
 
 val RecipeDetailsUiState.instructionList: List<String>
@@ -17,6 +19,7 @@ val RecipeDetailsUiState.instructionList: List<String>
 
 val RecipeDetailsUiState.tagList: List<String>
     get() = listOf(strCategory, strArea)
+
 fun CleanInstruction(instructions: String): String {
     // this will allow us to make each instruction look similar in the app
     return instructions.split("\n")

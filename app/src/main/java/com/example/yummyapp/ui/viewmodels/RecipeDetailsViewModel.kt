@@ -20,8 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RecipeDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    imagesRepository: RecipesRepository,
-    private val localRecipesRepository: LocalRecipesRepository  // Add this line
+    private val imagesRepository: RecipesRepository,
+    private val localRecipesRepository: LocalRecipesRepository
 ) :
     ViewModel() {
 
@@ -32,38 +32,56 @@ class RecipeDetailsViewModel @Inject constructor(
 
     init {
         CoroutineScope(Dispatchers.Default).launch {
-            try {
-                imagesRepository.getRecipesDetails(mealId)?.let {
-                    val uiState = RecipeDetailsUiState(
-                        it.idMeal,
-                        it.strMeal,
-                        it.strCategory,
-                        it.strArea,
-                        it.strInstructions,
-                        it.strMealThumb,
-                        it.ingredients
-                    )
-                    _uiState.value = uiState
+            runCatching {
+                localRecipesRepository.getRecipeDetails(mealId)
+            }.onSuccess { meal ->
+                updateUiState(meal)
+            }.getOrElse { _ ->
+                runCatching {
+                    imagesRepository.getRecipeDetails(mealId)
+                }.onSuccess { meal ->
+                    updateUiState(meal)
+                }.getOrElse { e ->
+                   throw e
+                    //wyjebac i zrobic to w repo jak gadalismy i jest w notkach todo
                 }
-            } catch (e: Exception) {
-
             }
         }
     }
 
+
     fun saveRecipeToDb(recipe: RecipeDetailsUiState) {
         CoroutineScope(Dispatchers.IO).launch {
-            val transformedMeal = TransformedMeal(
-                idMeal = recipe.idMeal,
-                strMeal = recipe.strMeal,
-                strMealThumb = recipe.strMealThumb,
-                strCategory = recipe.strCategory,
-                strArea = recipe.strArea,
-                strInstructions = recipe.strInstructions,
-                ingredients = recipe.strIngredients
-            )
-            localRecipesRepository.insertRecipe(transformedMeal)
+            try {
+                localRecipesRepository.getRecipeDetails(recipe.idMeal)
+            } catch (e: IllegalArgumentException) {
+                val transformedMeal = TransformedMeal(
+                    idMeal = recipe.idMeal,
+                    strMeal = recipe.strMeal,
+                    strMealThumb = recipe.strMealThumb,
+                    strCategory = recipe.strCategory,
+                    strArea = recipe.strArea,
+                    strInstructions = recipe.strInstructions,
+                    ingredients = recipe.strIngredients,
+                    isSaved = true
+                )
+                localRecipesRepository.insertRecipe(transformedMeal)
+            }
         }
+    }
+
+    private fun updateUiState(meal: TransformedMeal) {
+        val uiState = RecipeDetailsUiState(
+            meal.idMeal,
+            meal.strMeal,
+            meal.strCategory,
+            meal.strArea,
+            meal.strInstructions,
+            meal.strMealThumb,
+            meal.ingredients,
+            meal.isSaved
+        )
+        _uiState.value = uiState
     }
 
     fun removeRecipeFromDb(recipe: RecipeDetailsUiState) {
@@ -75,7 +93,8 @@ class RecipeDetailsViewModel @Inject constructor(
                 strCategory = recipe.strCategory,
                 strArea = recipe.strArea,
                 strInstructions = recipe.strInstructions,
-                ingredients = recipe.strIngredients
+                ingredients = recipe.strIngredients,
+                isSaved = false
             )
             localRecipesRepository.deleteRecipe(transformedMeal)
         }

@@ -38,20 +38,21 @@ class RecipesRepository @Inject constructor(private val recipeRemoteDataSource: 
                 meal.strArea,
                 meal.strInstructions,
                 meal.strMealThumb,
-                ingredients
+                ingredients,
+                false
             )
         }
 
         return TransformedRecipesResponse(transformedMeals)
     }
 
-    suspend fun getRecipesDetails(id: String): TransformedMeal {
+    suspend fun getRecipeDetails(id: String): TransformedMeal {
         transformedRecipesResponse.meals.find {
             it.idMeal == id
         }?.let {
             return it
         }
-        return getRecipesDetails("0")
+        return getRecipeDetails("0")
     }
     //trzeba pozniej ogarnac to moze zwracajac error?
 

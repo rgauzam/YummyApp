@@ -61,7 +61,8 @@ data class TransformedMeal(
     val strArea: String,
     val strInstructions: String,
     val strMealThumb: String,
-    val ingredients: List<Ingredient>
+    val ingredients: List<Ingredient>,
+    var isSaved: Boolean
 )
 
 @Serializable

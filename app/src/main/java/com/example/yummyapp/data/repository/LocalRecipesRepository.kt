@@ -18,6 +18,8 @@ interface I_RecipesRepository {
 
     suspend fun deleteRecipe(transformedMeal: TransformedMeal)
 
+    suspend fun getRecipeDetails(id:String):TransformedMeal
+
 }
 
 @Singleton
@@ -39,7 +41,8 @@ class LocalRecipesRepository @Inject constructor(
                             strIngredient = ingredient.strIngredient,
                             strMeasure = ingredient.strMeasure
                         )
-                    }
+                    },
+                    isSaved = true
                 )
             }
         }
@@ -79,25 +82,25 @@ class LocalRecipesRepository @Inject constructor(
         recipeDao.deleteMeal(localMeal)
     }
 
-//    override suspend fun insertRecipe(item: LocalMeal) = recipeDao.insertRecipe(item)
-//
-//    override suspend fun deleteRecipe(item: LocalMeal) = recipeDao.deleteRecipe(item)
-//    override fun getRecipes(): Flow<List<TransformedMeal>> {
-//        return recipeDao.getRecipesOrderedAlphabetically().map { meals ->
-//            meals.map { meal ->
-//                val ingredientsList = recipeDao.getIngredientsForMeal(meal.idMeal).first()
-//                TransformedMeal(
-//                    idMeal = meal.idMeal,
-//                    strMeal = meal.strMeal,
-//                    strCategory = meal.strCategory,
-//                    strArea = meal.strArea,
-//                    strInstructions = meal.strInstructions,
-//                    strMealThumb = meal.strMealThumb,
-//                    ingredients = ingredientsList.map {
-//                        Ingredient(it.strIngredient, it.strMeasure)
-//                    }
-//                )
-//            }
-//        }
-//    }
+    override suspend fun getRecipeDetails(id: String): TransformedMeal {
+        val mealWithIngredients = recipeDao.loadMealWithIngredientsById(id)
+        mealWithIngredients?.let {
+            return TransformedMeal(
+                idMeal = it.localMeal.idMeal,
+                strMeal = it.localMeal.strMeal,
+                strCategory = it.localMeal.strCategory,
+                strArea = it.localMeal.strArea,
+                strInstructions = it.localMeal.strInstructions,
+                strMealThumb = it.localMeal.strMealThumb,
+                ingredients = it.ingredients.map { ingredient ->
+                    Ingredient(
+                        strIngredient = ingredient.strIngredient,
+                        strMeasure = ingredient.strMeasure
+                    )
+                },
+                isSaved = true
+            )
+        } ?: throw IllegalArgumentException("No meal found with id $id")
+    }
+
 }

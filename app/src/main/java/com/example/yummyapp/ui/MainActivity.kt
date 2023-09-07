@@ -35,7 +35,6 @@ import com.example.yummyapp.ui.navigation.Nav.IMAGE_DETAILS_ID_PARAM
 import com.example.yummyapp.ui.navigation.Nav.IMAGE_DETAILS_SCREEN_ROUTE
 import com.example.yummyapp.ui.navigation.Nav.SAVED_IMAGES_SCREEN_ROUTE
 import com.example.yummyapp.ui.navigation.Nav.SEARCH_IMAGES_SCREEN_ROUTE
-import com.example.yummyapp.ui.navigation.Nav.SEARCH_TEXT_PARAM
 import com.example.yummyapp.ui.theme.YummyAppTheme
 import com.example.yummyapp.ui.viewmodels.RecipeDetailsViewModel
 import com.example.yummyapp.ui.viewmodels.SavedRecipesViewModel

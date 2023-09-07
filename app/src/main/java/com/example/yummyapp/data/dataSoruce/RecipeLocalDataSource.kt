@@ -1,5 +1,6 @@
-package com.example.yummyapp.data.repository
+package com.example.yummyapp.data.dataSoruce
 
+import android.content.SharedPreferences
 import com.example.yummyapp.data.db.RecipeDao
 import com.example.yummyapp.data.model.Ingredient
 import com.example.yummyapp.data.model.LocalIngredient
@@ -10,22 +11,34 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
+interface RecipesRepositoryI {
 
-interface I_RecipesRepository {
     fun getRecipes(): Flow<List<TransformedMeal>>
 
     suspend fun insertRecipe(transformedMeal: TransformedMeal)
 
     suspend fun deleteRecipe(transformedMeal: TransformedMeal)
 
-    suspend fun getRecipeDetails(id:String):TransformedMeal
+    suspend fun getRecipeDetails(id: String): TransformedMeal?
+
+    fun getLastId(): String?
 
 }
 
 @Singleton
-class LocalRecipesRepository @Inject constructor(
-    private val recipeDao: RecipeDao
-) : I_RecipesRepository {
+class RecipeLocalDataSource @Inject constructor(
+    private val recipeDao: RecipeDao,
+    private val sharedPreferences: SharedPreferences
+) : RecipesRepositoryI {
+
+    companion object {
+        const val LAST_RECIPE_ID = "LAST_RECIPE_ID"
+    }
+
+    override fun getLastId(): String? {
+        return sharedPreferences.getString(LAST_RECIPE_ID, "52841")
+    }
+
     override fun getRecipes(): Flow<List<TransformedMeal>> {
         return recipeDao.loadLocalMealWithIngredients().map { localMealsWithIngredientsList ->
             localMealsWithIngredientsList.map { mealWithIngredients ->
@@ -82,10 +95,13 @@ class LocalRecipesRepository @Inject constructor(
         recipeDao.deleteMeal(localMeal)
     }
 
-    override suspend fun getRecipeDetails(id: String): TransformedMeal {
+    override suspend fun getRecipeDetails(id: String): TransformedMeal? {
+
+        sharedPreferences.edit().putString(LAST_RECIPE_ID, id).apply()
+
         val mealWithIngredients = recipeDao.loadMealWithIngredientsById(id)
-        mealWithIngredients?.let {
-            return TransformedMeal(
+        return mealWithIngredients?.let {
+            TransformedMeal(
                 idMeal = it.localMeal.idMeal,
                 strMeal = it.localMeal.strMeal,
                 strCategory = it.localMeal.strCategory,
@@ -100,7 +116,7 @@ class LocalRecipesRepository @Inject constructor(
                 },
                 isSaved = true
             )
-        } ?: throw IllegalArgumentException("No meal found with id $id")
+        }
     }
-
 }
+

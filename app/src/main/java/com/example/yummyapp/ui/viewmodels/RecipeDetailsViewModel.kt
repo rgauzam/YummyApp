@@ -2,9 +2,7 @@ package com.example.yummyapp.ui.viewmodels
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.example.yummyapp.data.model.Ingredient
 import com.example.yummyapp.data.model.TransformedMeal
-import com.example.yummyapp.data.repository.LocalRecipesRepository
 import com.example.yummyapp.data.repository.RecipesRepository
 import com.example.yummyapp.ui.navigation.Nav.IMAGE_DETAILS_ID_PARAM
 import com.example.yummyapp.ui.uiStates.RecipeDetailsUiState
@@ -20,40 +18,35 @@ import javax.inject.Inject
 @HiltViewModel
 class RecipeDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val imagesRepository: RecipesRepository,
-    private val localRecipesRepository: LocalRecipesRepository
+    private val recipesRepository: RecipesRepository
 ) :
     ViewModel() {
 
     private val mealId: String = checkNotNull(savedStateHandle[IMAGE_DETAILS_ID_PARAM]).toString()
-
     private val _uiState: MutableStateFlow<RecipeDetailsUiState?> = MutableStateFlow(null)
     val uiState: StateFlow<RecipeDetailsUiState?> = _uiState
 
     init {
+        val idToFetch = mealId
         CoroutineScope(Dispatchers.Default).launch {
-            runCatching {
-                localRecipesRepository.getRecipeDetails(mealId)
-            }.onSuccess { meal ->
-                updateUiState(meal)
-            }.getOrElse { _ ->
-                runCatching {
-                    imagesRepository.getRecipeDetails(mealId)
-                }.onSuccess { meal ->
-                    updateUiState(meal)
-                }.getOrElse { e ->
-                   throw e
-                    //wyjebac i zrobic to w repo jak gadalismy i jest w notkach todo
-                }
-            }
+            val recipeDetail = recipesRepository.getRecipeDetails(idToFetch)
+            _uiState.value = RecipeDetailsUiState(
+                idMeal = recipeDetail.idMeal,
+                strMeal = recipeDetail.strMeal,
+                strCategory = recipeDetail.strCategory,
+                strArea = recipeDetail.strArea,
+                strInstructions = recipeDetail.strInstructions,
+                strMealThumb = recipeDetail.strMealThumb,
+                strIngredients = recipeDetail.ingredients,
+                isSaved = recipeDetail.isSaved
+            )
         }
     }
 
-
     fun saveRecipeToDb(recipe: RecipeDetailsUiState) {
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.Default).launch {
             try {
-                localRecipesRepository.getRecipeDetails(recipe.idMeal)
+                recipesRepository.getRecipeDetails(recipe.idMeal)
             } catch (e: IllegalArgumentException) {
                 val transformedMeal = TransformedMeal(
                     idMeal = recipe.idMeal,
@@ -65,23 +58,9 @@ class RecipeDetailsViewModel @Inject constructor(
                     ingredients = recipe.strIngredients,
                     isSaved = true
                 )
-                localRecipesRepository.insertRecipe(transformedMeal)
+                recipesRepository.insertRecipe(transformedMeal)
             }
         }
-    }
-
-    private fun updateUiState(meal: TransformedMeal) {
-        val uiState = RecipeDetailsUiState(
-            meal.idMeal,
-            meal.strMeal,
-            meal.strCategory,
-            meal.strArea,
-            meal.strInstructions,
-            meal.strMealThumb,
-            meal.ingredients,
-            meal.isSaved
-        )
-        _uiState.value = uiState
     }
 
     fun removeRecipeFromDb(recipe: RecipeDetailsUiState) {
@@ -96,7 +75,32 @@ class RecipeDetailsViewModel @Inject constructor(
                 ingredients = recipe.strIngredients,
                 isSaved = false
             )
-            localRecipesRepository.deleteRecipe(transformedMeal)
+            recipesRepository.deleteRecipe(transformedMeal)
         }
     }
+
+    fun getLastId(): String {
+        return recipesRepository.getLastIdDetails()
+    }
+
 }
+
+
+//    init {
+//        CoroutineScope(Dispatchers.Default).launch {
+//            runCatching {
+//                recipesRepository.getRecipeDetails(mealId)
+//            }.onSuccess { meal ->
+//                updateUiState(meal)
+//            }.getOrElse { _ ->
+//                runCatching {
+//                    imagesRepository.getRecipeDetails(mealId)
+//                }.onSuccess { meal ->
+//                    updateUiState(meal)
+//                }.getOrElse { e ->
+//                    throw e
+//                    //wyjebac i zrobic to w repo jak gadalismy i jest w notkach todo
+//                }
+//            }
+//        }
+//    }

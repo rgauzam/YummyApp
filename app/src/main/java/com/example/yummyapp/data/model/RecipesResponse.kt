@@ -10,3 +10,6 @@ data class RecipesResponse(
 data class TransformedRecipesResponse(
     val meals: List<TransformedMeal>
 )
+fun TransformedRecipesResponse.getFirstMeal(): TransformedMeal? {
+    return meals.firstOrNull()
+}

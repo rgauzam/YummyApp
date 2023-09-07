@@ -52,7 +52,7 @@ class SearchRecipesViewModel @Inject constructor(
     }
 
     private suspend fun searchRecipes(query: String): TransformedRecipesResponse {
-        return recipesRepository.getRecipes(query)
+        return recipesRepository.searchRecipes(query)
     }
 
     private fun cr8UiStateFromResponse(recipesResponse: TransformedRecipesResponse): UIState.Success<List<RecipeItemUiState>> {

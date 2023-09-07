@@ -21,10 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.yummyapp.R
 import com.example.yummyapp.ui.components.Recipes
 import com.example.yummyapp.ui.navigation.Nav
+import com.example.yummyapp.ui.viewmodels.RecipeDetailsViewModel
 import com.example.yummyapp.ui.viewmodels.SavedRecipesViewModel
 
 

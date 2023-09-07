@@ -1,10 +1,9 @@
 package com.example.yummyapp.ui.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.yummyapp.data.model.TransformedMeal
-import com.example.yummyapp.data.repository.LocalRecipesRepository
+import com.example.yummyapp.data.repository.RecipesRepository
 import com.example.yummyapp.ui.uiStates.RecipeItemUiState
 import com.example.yummyapp.ui.uiStates.SavedRecipesUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,11 +17,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SavedRecipesViewModel @Inject constructor(
-    localRecipesRepository: LocalRecipesRepository
+    recipesRepository: RecipesRepository
 
 ) : ViewModel() {
 
-    private val _recipes = localRecipesRepository.getRecipes().stateIn(
+    private val _recipes = recipesRepository.getRecipes().stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(), emptyList()
     )
     private val _uiState: MutableStateFlow<SavedRecipesUiState> = MutableStateFlow(
@@ -49,7 +48,11 @@ class SavedRecipesViewModel @Inject constructor(
 
     private fun cr8UiStateFromResponse(recipesResponse: List<TransformedMeal>): List<RecipeItemUiState> {
         val itemsUiState = recipesResponse.map {
-            RecipeItemUiState(idMeal = it.idMeal, strMeal =  it.strMeal,strMealThumb =  it.strMealThumb)
+            RecipeItemUiState(
+                idMeal = it.idMeal,
+                strMeal = it.strMeal,
+                strMealThumb = it.strMealThumb
+            )
         }
         return itemsUiState
     }

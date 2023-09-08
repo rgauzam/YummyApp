@@ -2,6 +2,7 @@ package com.example.yummyapp.ui.viewmodels
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.yummyapp.data.model.TransformedMeal
 import com.example.yummyapp.data.repository.RecipesRepository
 import com.example.yummyapp.ui.navigation.Nav.IMAGE_DETAILS_ID_PARAM
@@ -43,27 +44,24 @@ class RecipeDetailsViewModel @Inject constructor(
         }
     }
 
-    fun saveRecipeToDb(recipe: RecipeDetailsUiState) {
+    fun saveRecipe(recipe: RecipeDetailsUiState) {
         CoroutineScope(Dispatchers.Default).launch {
-            try {
-                recipesRepository.getRecipeDetails(recipe.idMeal)
-            } catch (e: IllegalArgumentException) {
-                val transformedMeal = TransformedMeal(
-                    idMeal = recipe.idMeal,
-                    strMeal = recipe.strMeal,
-                    strMealThumb = recipe.strMealThumb,
-                    strCategory = recipe.strCategory,
-                    strArea = recipe.strArea,
-                    strInstructions = recipe.strInstructions,
-                    ingredients = recipe.strIngredients,
-                    isSaved = true
-                )
-                recipesRepository.insertRecipe(transformedMeal)
-            }
+            val transformedMeal = TransformedMeal(
+                idMeal = recipe.idMeal,
+                strMeal = recipe.strMeal,
+                strMealThumb = recipe.strMealThumb,
+                strCategory = recipe.strCategory,
+                strArea = recipe.strArea,
+                strInstructions = recipe.strInstructions,
+                ingredients = recipe.strIngredients,
+                isSaved = true
+            )
+            recipesRepository.insertRecipe(transformedMeal)
+
         }
     }
 
-    fun removeRecipeFromDb(recipe: RecipeDetailsUiState) {
+    fun removeRecipe(recipe: RecipeDetailsUiState) {
         CoroutineScope(Dispatchers.IO).launch {
             val transformedMeal = TransformedMeal(
                 idMeal = recipe.idMeal,
@@ -77,6 +75,25 @@ class RecipeDetailsViewModel @Inject constructor(
             )
             recipesRepository.deleteRecipe(transformedMeal)
         }
+    }
+
+
+
+    fun clickSave(recipe: RecipeDetailsUiState) {
+        CoroutineScope(Dispatchers.Default).launch {
+            val updatedRecipeDetail = recipesRepository.updateUiState(recipe.idMeal)
+            _uiState.value = RecipeDetailsUiState(
+                idMeal = updatedRecipeDetail.idMeal,
+                strMeal = updatedRecipeDetail.strMeal,
+                strCategory = updatedRecipeDetail.strCategory,
+                strArea = updatedRecipeDetail.strArea,
+                strInstructions = updatedRecipeDetail.strInstructions,
+                strMealThumb = updatedRecipeDetail.strMealThumb,
+                strIngredients = updatedRecipeDetail.ingredients,
+                isSaved = updatedRecipeDetail.isSaved
+            )
+        }
+
     }
 
     fun getLastId(): String {

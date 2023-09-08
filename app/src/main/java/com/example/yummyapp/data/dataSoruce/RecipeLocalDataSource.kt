@@ -83,16 +83,8 @@ class RecipeLocalDataSource @Inject constructor(
     }
 
     override suspend fun deleteRecipe(transformedMeal: TransformedMeal) {
-        val localMeal = LocalMeal(
-            idMeal = transformedMeal.idMeal,
-            strMeal = transformedMeal.strMeal,
-            strMealThumb = transformedMeal.strMealThumb,
-            strCategory = transformedMeal.strCategory,
-            strArea = transformedMeal.strArea,
-            strInstructions = transformedMeal.strInstructions
-        )
         recipeDao.deleteIngredientsForMeal(transformedMeal.idMeal)
-        recipeDao.deleteMeal(localMeal)
+        recipeDao.deleteMeal(transformedMeal.idMeal)
     }
 
     override suspend fun getRecipeDetails(id: String): TransformedMeal? {

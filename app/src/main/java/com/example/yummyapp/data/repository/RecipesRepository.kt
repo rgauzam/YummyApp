@@ -24,6 +24,19 @@ class RecipesRepository @Inject constructor(
         return transformedRecipesResponse
     }
 
+    suspend fun updateUiState(id: String): TransformedMeal {
+        val localRecipe = getRecipeDetails(id)
+        if (localRecipe != null) {
+            localRecipe.isSaved = !localRecipe.isSaved
+        }
+        if (localRecipe!!.isSaved) {
+            insertRecipe(localRecipe)
+        } else {
+            deleteRecipe(localRecipe)
+        }
+        return localRecipe
+    }
+
     suspend fun getRecipeDetails(id: String): TransformedMeal {
         val localResult: TransformedMeal? = recipeLocalDataSource.getRecipeDetails(id)
         if (localResult == null) {

@@ -16,8 +16,8 @@ interface RecipeDao {
     @Insert
     suspend fun insertMeal(localMeal: LocalMeal)
 
-    @Delete
-    suspend fun deleteMeal(localMeal: LocalMeal)
+    @Query("DELETE FROM meals WHERE idMeal = :mealId")
+    suspend fun deleteMeal(mealId: String)
 
     @Insert
     suspend fun insertIngredient(localIngredient: LocalIngredient)

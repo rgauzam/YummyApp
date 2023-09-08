@@ -67,7 +67,6 @@ fun ImageDetailsView(
     navHostController: NavHostController,
     viewModel: RecipeDetailsViewModel,
 ) {
-    var isSaved by remember { mutableStateOf(state.isSaved) }
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
             {
@@ -90,12 +89,10 @@ fun ImageDetailsView(
                     },
                     actions = {
                         IconButton(onClick = {
-                            isSaved = !isSaved
-                            if (isSaved) viewModel.saveRecipeToDb(state)
-                            else viewModel.removeRecipeFromDb(state)
+                            viewModel.clickSave(state)
                         }) {
                             Icon(
-                                imageVector = if (isSaved) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                imageVector = if (state.isSaved) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                                 contentDescription = "Localized description"
                             )
                         }

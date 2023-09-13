@@ -20,7 +20,6 @@ abstract class RecipeDatabase : RoomDatabase() {
         private var Instance: RecipeDatabase? = null
 
         fun getDatabase(context: Context): RecipeDatabase {
-            // if the Instance is not null, return it, otherwise create a new database instance.
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, RecipeDatabase::class.java, "recipe_database")
                     .build()

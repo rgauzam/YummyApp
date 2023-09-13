@@ -14,13 +14,7 @@ import javax.inject.Inject
 
 class RecipeRemoteDataSource @Inject constructor(private val client: HttpClient) {
 
-//    private val baseUrl = "https://tasty.p.rapidapi.com/recipes/list?from=0&size=20"
-//    private val apiKey = BuildConfig.API_KEY tutaj to raczej nie potrzebne bo apikey to 1
-
-   // private lateinit var recipesResponse: RecipesResponse dlaczego tu mialo byc lateinit a nie tak jak ja teraz napisalam? todo
     private lateinit var transformedRecipesResponse: TransformedRecipesResponse
-
-
     suspend fun getRecipes(query: String): TransformedRecipesResponse {
         val recipesResponse: RecipesResponse = client.get {
             url("https://www.themealdb.com/api/json/v1/1/search.php?s=$query")
@@ -40,8 +34,7 @@ class RecipeRemoteDataSource @Inject constructor(private val client: HttpClient)
     }
 
 
-
-    suspend fun transformMealList(input: List<Meal>): TransformedRecipesResponse {
+    fun transformMealList(input: List<Meal>): TransformedRecipesResponse {
         val transformedMeals = input.map { meal ->
             val ingredients = mutableListOf<Ingredient>()
             for (i in 1..20) {

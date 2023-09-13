@@ -15,9 +15,7 @@ class RecipesRepository @Inject constructor(
     private val recipeRemoteDataSource: RecipeRemoteDataSource,
     private val recipeLocalDataSource: RecipeLocalDataSource
 ) {
-
-    //    private lateinit var recipesResponse: RecipesResponse
-    private lateinit var transformedRecipesResponse: TransformedRecipesResponse  // wciaz nieogarniam czemu tu jest lateinit todo
+    private lateinit var transformedRecipesResponse: TransformedRecipesResponse
 
     suspend fun searchRecipes(query: String): TransformedRecipesResponse {
         transformedRecipesResponse = recipeRemoteDataSource.getRecipes(query)
@@ -26,10 +24,8 @@ class RecipesRepository @Inject constructor(
 
     suspend fun updateUiState(id: String): TransformedMeal {
         val localRecipe = getRecipeDetails(id)
-        if (localRecipe != null) {
-            localRecipe.isSaved = !localRecipe.isSaved
-        }
-        if (localRecipe!!.isSaved) {
+        localRecipe.isSaved = !localRecipe.isSaved
+        if (localRecipe.isSaved) {
             insertRecipe(localRecipe)
         } else {
             deleteRecipe(localRecipe)
@@ -38,13 +34,16 @@ class RecipesRepository @Inject constructor(
     }
 
     suspend fun getRecipeDetails(id: String): TransformedMeal {
+        recipeLocalDataSource.putLastId(id)
         val localResult: TransformedMeal? = recipeLocalDataSource.getRecipeDetails(id)
         if (localResult == null) {
             val result = recipeRemoteDataSource.getRecipesDetails(id)
             val firstMeal = result.getFirstMeal()
             if (firstMeal != null) {
                 return firstMeal
-            } else return getRecipeDetails("0")
+            } else {
+                return getRecipeDetails("53020")
+            }
         }
         return localResult
     }//  wciaz trzeba handle error todo
@@ -63,10 +62,8 @@ class RecipesRepository @Inject constructor(
 
     fun getLastIdDetails(): String {
         val lastId = recipeLocalDataSource.getLastId()
-        return lastId ?: "52841"
+        return lastId.toString()
     }
-
-
 }
 
 

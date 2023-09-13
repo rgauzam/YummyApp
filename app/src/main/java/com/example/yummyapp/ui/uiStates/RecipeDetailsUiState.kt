@@ -11,7 +11,6 @@ data class RecipeDetailsUiState(
     val strMealThumb: String,
     val strIngredients: List<Ingredient>,
     var isSaved: Boolean
-//JAK ZROBIC ZEBY TE SERDUSZKO DZIALALO Z TYM I TO NA BIEZACO? TODO
 )
 
 val RecipeDetailsUiState.instructionList: List<String>

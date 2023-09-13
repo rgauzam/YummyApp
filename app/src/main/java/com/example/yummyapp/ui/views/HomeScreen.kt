@@ -34,6 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.yummyapp.R
+import com.example.yummyapp.ui.components.ErrorBox
 import com.example.yummyapp.ui.components.Recipes
 import com.example.yummyapp.ui.uiStates.SearchUiState
 import com.example.yummyapp.ui.uiStates.UIState
@@ -41,7 +42,7 @@ import com.example.yummyapp.ui.viewmodels.SearchRecipesViewModel
 
 @Composable
 fun SearchRecipesScreen(viewModel: SearchRecipesViewModel, navHostController: NavHostController) {
-    val state = viewModel.uiState.collectAsState().value // łapie wszystko z view modelu
+    val state = viewModel.uiState.collectAsState().value
     val listState = state.uiState
 
     Column {
@@ -50,7 +51,7 @@ fun SearchRecipesScreen(viewModel: SearchRecipesViewModel, navHostController: Na
             viewModel = viewModel,
             onSearch = { viewModel.loadImages() }
         )
-//        if (state.searchingText.isNotEmpty()) {
+
         when (listState) {
             is UIState.Idle -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Center) {
@@ -59,7 +60,6 @@ fun SearchRecipesScreen(viewModel: SearchRecipesViewModel, navHostController: Na
                         textAlign = TextAlign.Justify
                     )
                 }
-
             }
 
             is UIState.Loading -> {
@@ -78,15 +78,12 @@ fun SearchRecipesScreen(viewModel: SearchRecipesViewModel, navHostController: Na
                     is java.net.UnknownHostException -> {
                         ErrorBox(errorMessage = stringResource(R.string.internet_error))
                     }
-
                     else -> {
                         ErrorBox(errorMessage = stringResource(R.string.no_recipes_error))
                     }
                 }
             }
-//            }
         }
-
     }
 }
 
@@ -126,21 +123,4 @@ fun SearchBar(
     )
 }
 
-@Composable
-fun ErrorBox(errorMessage: String) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Center
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                Icons.Default.Warning,
-                contentDescription = null,
-                modifier = Modifier.size(25.dp)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = errorMessage, textAlign = TextAlign.Center)
-        }
-    }
-}
 

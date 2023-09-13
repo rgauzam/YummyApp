@@ -1,7 +1,6 @@
 package com.example.yummyapp.data.db
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
@@ -34,21 +33,4 @@ interface RecipeDao {
 
 
 }
-
-//@Dao
-//interface IngredientDao {
-//    @Insert
-//    fun insertIngredient(ingredient: LocalIngredient)
-//
-//    @Query("SELECT * FROM ingredients WHERE mealId = :mealId")
-//    fun getIngredientsForMeal(mealId: String): List<LocalIngredient>
-//}
-
-//    @Query("SELECT * FROM ingredients WHERE idMeal = :mealId")
-//    fun getIngredientsForMeal(mealId: String): Flow<List<LocalIngredient>>
-
-
-//    @Query("SELECT * FROM recipes")
-//    fun loadLocalMealWithIngredients(): List<LocalMealWithIngredients>?
-
 

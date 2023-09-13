@@ -18,12 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchRecipesViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val recipesRepository: RecipesRepository
 ) :
     ViewModel() {
-
-    // private val startSearchText: String = checkNotNull(savedStateHandle[SEARCH_TEXT_PARAM])
 
     private val _uiState: MutableStateFlow<SearchUiState> = MutableStateFlow(
         SearchUiState(

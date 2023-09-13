@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
+
 interface RecipesRepositoryI {
 
     fun getRecipes(): Flow<List<TransformedMeal>>
@@ -22,6 +23,8 @@ interface RecipesRepositoryI {
     suspend fun getRecipeDetails(id: String): TransformedMeal?
 
     fun getLastId(): String?
+
+    fun putLastId(id: String)
 
 }
 
@@ -36,7 +39,11 @@ class RecipeLocalDataSource @Inject constructor(
     }
 
     override fun getLastId(): String? {
-        return sharedPreferences.getString(LAST_RECIPE_ID, "52841")
+        return sharedPreferences.getString(LAST_RECIPE_ID, "")
+    }
+
+    override fun putLastId(id: String) {
+        sharedPreferences.edit().putString(LAST_RECIPE_ID, id).apply()
     }
 
     override fun getRecipes(): Flow<List<TransformedMeal>> {

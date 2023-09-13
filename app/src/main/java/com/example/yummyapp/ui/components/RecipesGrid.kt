@@ -84,8 +84,6 @@ fun RecipeItem(
                 style = MaterialTheme.typography.labelSmall,
                 textAlign = TextAlign.Start,
             )
-
-
         }
     }
 }

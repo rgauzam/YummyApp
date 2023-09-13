@@ -88,7 +88,6 @@ private fun YummyApp() {
                                 popUpTo(navController.graph.findStartDestination().id) {
                                     saveState = true
                                 }
-//                                restoreState = true
                             }
                         }
                     )
@@ -111,7 +110,7 @@ private fun YummyApp() {
                 composable(
                     IMAGE_DETAILS_SCREEN_ROUTE + "{$IMAGE_DETAILS_ID_PARAM}",
                     arguments = listOf(navArgument(IMAGE_DETAILS_ID_PARAM) {
-                        type = NavType.IntType
+                        type = NavType.StringType
                     })
                 ) {
                     val viewModel = hiltViewModel<RecipeDetailsViewModel>()

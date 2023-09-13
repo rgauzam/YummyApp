@@ -21,12 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.yummyapp.R
 import com.example.yummyapp.ui.components.Recipes
-import com.example.yummyapp.ui.navigation.Nav
-import com.example.yummyapp.ui.viewmodels.RecipeDetailsViewModel
 import com.example.yummyapp.ui.viewmodels.SavedRecipesViewModel
 
 
@@ -34,10 +31,8 @@ import com.example.yummyapp.ui.viewmodels.SavedRecipesViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SavedRecipesScreen(viewModel: SavedRecipesViewModel, navHostController: NavHostController) {
-    val state = viewModel.uiState.collectAsState().value // łapie wszystko z view modelu
-
+    val state = viewModel.uiState.collectAsState().value
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    // val listState = state.uiState  to jest do pobiernaia z neta wiec tu sie nie przyda
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -52,7 +47,7 @@ fun SavedRecipesScreen(viewModel: SavedRecipesViewModel, navHostController: NavH
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = {  navHostController.navigateUp() }) {
+                    IconButton(onClick = { navHostController.navigateUp() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Localized description"
@@ -73,7 +68,6 @@ fun SavedRecipesScreen(viewModel: SavedRecipesViewModel, navHostController: NavH
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             Recipes(recipes = state.savedRecipes, navHostController = navHostController)
-            Log.d("RecipeImage", "URL: ${state.savedRecipes}")
         }
     }
 }

@@ -16,7 +16,10 @@ object SharedPreferencesModule {
     @Provides
     @Singleton
     fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
-        return context.getSharedPreferences("com.example.yummyapp.PREFERENCE_FILE_KEY", Context.MODE_PRIVATE)
+        return context.getSharedPreferences(
+            "com.example.yummyapp.PREFERENCE_FILE_KEY",
+            Context.MODE_PRIVATE
+        )
     }
 }
 

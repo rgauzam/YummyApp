@@ -3,7 +3,7 @@ package com.example.yummyapp.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.yummyapp.data.model.TransformedMeal
-import com.example.yummyapp.data.repository.RecipesRepository
+import com.example.yummyapp.data.repository.RecipesRepositoryI
 import com.example.yummyapp.ui.uiStates.RecipeItemUiState
 import com.example.yummyapp.ui.uiStates.SavedRecipesUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,8 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SavedRecipesViewModel @Inject constructor(
-    recipesRepository: RecipesRepository
-
+    recipesRepository: RecipesRepositoryI
 ) : ViewModel() {
 
     private val _recipes = recipesRepository.getRecipes().stateIn(

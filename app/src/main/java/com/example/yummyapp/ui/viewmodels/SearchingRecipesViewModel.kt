@@ -1,9 +1,8 @@
 package com.example.yummyapp.ui.viewmodels
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.yummyapp.data.model.TransformedRecipesResponse
-import com.example.yummyapp.data.repository.RecipesRepository
+import com.example.yummyapp.data.repository.RecipesRepositoryI
 import com.example.yummyapp.ui.uiStates.RecipeItemUiState
 import com.example.yummyapp.ui.uiStates.SearchUiState
 import com.example.yummyapp.ui.uiStates.UIState
@@ -18,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchRecipesViewModel @Inject constructor(
-    private val recipesRepository: RecipesRepository
+    private val recipesRepository: RecipesRepositoryI
 ) :
     ViewModel() {
 
@@ -48,11 +47,11 @@ class SearchRecipesViewModel @Inject constructor(
         _uiState.value = uiState
     }
 
-    private suspend fun searchRecipes(query: String): TransformedRecipesResponse {
+    internal suspend fun searchRecipes(query: String): TransformedRecipesResponse {
         return recipesRepository.searchRecipes(query)
     }
 
-    private fun cr8UiStateFromResponse(recipesResponse: TransformedRecipesResponse): UIState.Success<List<RecipeItemUiState>> {
+    internal fun cr8UiStateFromResponse(recipesResponse: TransformedRecipesResponse): UIState.Success<List<RecipeItemUiState>> {
         val itemsUiState = recipesResponse.meals.map {
             RecipeItemUiState(it.idMeal, it.strMeal, it.strMealThumb)
         }

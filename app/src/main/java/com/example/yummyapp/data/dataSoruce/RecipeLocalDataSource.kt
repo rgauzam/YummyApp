@@ -12,7 +12,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
-interface RecipesRepositoryI {
+interface RecipeLocalDataSourceI {
 
     fun getRecipes(): Flow<List<TransformedMeal>>
 
@@ -32,7 +32,7 @@ interface RecipesRepositoryI {
 class RecipeLocalDataSource @Inject constructor(
     private val recipeDao: RecipeDao,
     private val sharedPreferences: SharedPreferences
-) : RecipesRepositoryI {
+) : RecipeLocalDataSourceI {
 
     companion object {
         const val LAST_RECIPE_ID = "LAST_RECIPE_ID"

@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,30 +21,9 @@ class SavedRecipesViewModel @Inject constructor(
     recipesRepository: RecipesRepositoryI
 ) : ViewModel() {
 
-    private val _recipes = recipesRepository.getRecipes().stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(), emptyList()
-    )
-    private val _uiState: MutableStateFlow<SavedRecipesUiState> = MutableStateFlow(
-        SavedRecipesUiState()
-    )
-    val uiState: StateFlow<SavedRecipesUiState> = _uiState
-
-    init {
-        loadRecipes()
-    }
-
-    fun getRecipes(): StateFlow<List<TransformedMeal>> {
-        return _recipes
-    }
-
-    fun loadRecipes() {
-        viewModelScope.launch {
-            getRecipes().collect { recipes ->
-                val uiState = cr8UiStateFromResponse(recipes)
-                _uiState.value = _uiState.value.copy(savedRecipes = uiState)
-            }
-        }
-    }
+    val uiState: StateFlow<SavedRecipesUiState> = recipesRepository.getRecipes().map {
+        SavedRecipesUiState(cr8UiStateFromResponse(it))
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), SavedRecipesUiState())
 
     private fun cr8UiStateFromResponse(recipesResponse: List<TransformedMeal>): List<RecipeItemUiState> {
         val itemsUiState = recipesResponse.map {

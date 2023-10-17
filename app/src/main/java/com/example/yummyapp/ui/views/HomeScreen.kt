@@ -116,7 +116,6 @@ fun SearchBar(
         modifier = modifier
             .fillMaxWidth()
             .padding(dimensionResource(R.dimen.padding_extra_small))
-            //.testTag("searching")
     )
 }
 
